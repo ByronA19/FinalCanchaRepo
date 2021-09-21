@@ -1,0 +1,23 @@
+{
+    "elements": {},
+    "attributes": {
+        "th:text": {
+            "context": "span"
+        },
+        "th:onclick": {
+            "context": "a"
+        },
+        "th:action": {
+            "context": "form"
+        },
+        "th:field": {
+            "context": "input"
+        },
+        "th:href": {
+            "context": "a"
+        },
+        "th:value": {
+            "context": "input"
+        }
+    }
+}

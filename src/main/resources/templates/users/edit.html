@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="base/master">
+    
+    <head>
+        <th:block layout:fragment="css">
+            <style>
+                .uppercase {
+                    text-transform: uppercase;
+                }                
+            </style>
+        </th:block>        
+        <title>Información del Usuario</title>
+    </head>
+    <body>
+        <div class="d-flex align-items-baseline flex-wrap mr-5" layout:fragment="breadcrumbs">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold my-1 mr-5">Usuarios</h5>
+            <!--end::Page Title-->
+            <!--begin::Breadcrumb-->
+            <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+                <li class="breadcrumb-item">
+                    <a href="" class="text-muted">General</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/users}" class="text-muted">Usuarios</a>
+                </li>
+            </ul>
+            <!--end::Breadcrumb-->
+        </div>
+        
+        <div class="container" layout:fragment="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form th:action="@{/users/save}" th:object="${user}" method="post" enctype="multipart/form-data" id="form_user">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Información del Usuario</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">                                            
+                                            <div class="image-input image-input-outline" id="kt_image_1">
+                                                <label>Fotografía</label>
+
+                                                <div class="image-input-wrapper" th:style="'background: url(\'' + ${!user.isEmpty() && user.get().getImagen() != null ? user.get().getPath() : 'assets/media/users/blank.png'} + '\'); background-size: cover;'"></div>
+
+                                                <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                                                    <i class="fa fa-pen icon-sm text-muted"></i>
+                                                    <input type="file" name="file" accept=".png, .jpg, .jpeg"/>
+                                                    <input type="hidden" th:field="*{imagen}"/>
+                                                    <input type="hidden" name="file_remove"/>
+                                                </label>
+
+                                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Cédula</label>
+                                            <input type="text" class="form-control" th:field="*{cedula}" required th:readonly="${!user.isEmpty()}">
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Nombre</label>
+                                            <input type="text" class="form-control uppercase" th:field="*{nombre}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Apellidos</label>
+                                            <input type="text" class="form-control uppercase" th:field="*{apellidos}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" th:field="*{email}" required>
+                                        </div>
+                                    </div>                                
+                                </div>                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Celular</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">02</span>
+                                                </div>
+                                                <input type="text" class="form-control" th:field="*{celular}" pattern="[0-9.]+" title="Ingrese un número válido, sin espacios">
+                                            </div> 
+                                        </div>
+                                    </div>                                
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Teléfono</label>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">+593</span>
+                                                </div>
+                                                <input type="text" class="form-control" th:field="*{telefono}" pattern="[0-9.]+" title="Ingrese un número válido, sin espacios">
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Dirección</label>
+                                            <input type="text" class="form-control uppercase" th:field="*{direccion}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+<!--                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Usuario</label>
+                                            <input type="text" class="form-control" th:field="*{usuariox}" required>
+                                        </div>
+                                    </div>-->
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input type="password" class="form-control" th:field="*{password}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group" th:if="${#authentication.getPrincipal().getRol().getNombre() == 'Administrador'}">
+                                            <label>Rol</label>
+                                            <select class="form-control" th:field="*{rol.id}" required>
+                                                 <option value=""> -- </option>
+                                                 <option th:each="role : ${roles}" th:value="${role.key}" th:text="${role.value}"></option>                                                 
+                                            </select>
+                                        </div>
+                                        <input type="hidden" th:field="*{rol.id}" th:unless="${#authentication.getPrincipal().getRol().getNombre() == 'Administrador'}">
+                                    </div> 
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a th:href="@{/users}"  class="btn btn-secondary" th:if="${#authentication.getPrincipal().getRol().getNombre().equals('Administrador')}">Cancelar</a>
+                                <button type="submit" class="btn btn-success" id="submit_button">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </div>
+        
+        <th:block layout:fragment="script">
+            <script>
+                var avatar1 = new KTImageInput('kt_image_1');
+                
+                const validarCedula = function (a) {
+                    return {
+                        validate: function (input) {
+
+                            const value = input.value;
+                            if (value === '') {
+                                return {
+                                    valid: false
+                                };
+                            }
+
+                            // Check the password strength
+                            if (value.length !== 10) {
+                                return {
+                                    valid: false
+                                };
+                            }
+
+                            var total = 0;
+                            var cad = value;
+                            var longitud = cad.length;
+                            var longcheck = longitud - 1;      
+
+                            if (cad !== "" && longitud === 10) {
+                                for (var i = 0; i < longcheck; i++) {
+                                    if (i % 2 === 0) {
+                                        var aux = cad.charAt(i) * 2;
+                                        if (aux > 9)
+                                            aux -= 9;
+                                        total += aux;
+                                    } else {
+                                        total += parseInt(cad.charAt(i)); // parseInt o concatenará en lugar de sumar
+                                    }
+                                }
+                                total = total % 10 ? 10 - total % 10 : 0;
+                                if (cad.charAt(longitud - 1) == total) {
+                                    return {
+                                        valid: true
+                                    };
+                                }
+                            }
+
+                            return {
+                                valid: false
+                            };
+                        },
+                    };
+                };
+
+                // Register the validator
+                FormValidation.validators.cedulaValida = validarCedula;    
+
+                var form = KTUtil.getById('form_user');
+                var formSubmitUrl = KTUtil.attr(form, 'action');
+                var formSubmitButton = KTUtil.getById('submit_button');
+
+//                if (!form) {
+//                    return 0;
+//                }
+
+                FormValidation.formValidation(
+                    form,
+                    {
+                        fields: {
+                            nombre: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                }
+                            },
+                            apellidos: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                }
+                            },
+                            cedula: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                    digits: {
+                                        message: 'Solamente números'
+                                    },
+                                    cedulaValida: {
+                                        message: 'La cédula no es válida'
+                                    },
+                                }
+                            },
+                            celular: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                    digits: {
+                                        message: 'Solamente números'
+                                    },
+                                }
+                            },
+                            telefono: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                    digits: {
+                                        message: 'Solamente números'
+                                    },
+                                }
+                            },
+                            email: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                    emailAddress: {
+                                        message: 'Email no válido'
+                                    }
+                                }
+                            },
+                            direccion: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                }
+                            },
+                            "rol.id": {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                }
+                            },
+                            password: {
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Campo requerido'
+                                    },
+                                }
+                            },
+                        },
+                        plugins: {
+                            trigger: new FormValidation.plugins.Trigger(),
+                            submitButton: new FormValidation.plugins.SubmitButton(),
+                            defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                            bootstrap: new FormValidation.plugins.Bootstrap({
+                                //	eleInvalidClass: '', // Repace with uncomment to hide bootstrap validation icons
+                                //	eleValidClass: '',   // Repace with uncomment to hide bootstrap validation icons
+                            })
+                        }
+                    }
+                )
+                .on('core.form.valid', function () {
+                    // Show loading state on button
+                    KTUtil.btnWait(formSubmitButton, _buttonSpinnerClasses, "Please wait");
+
+                    // Simulate Ajax request
+                    setTimeout(function () {
+                        KTUtil.btnRelease(formSubmitButton);
+                    }, 2000);
+                })
+                .on('core.form.invalid', function () {
+                    Swal.fire({
+                        text: "Por favor, llena todos los campos",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, de acuerdo!",
+                        customClass: {
+                            confirmButton: "btn font-weight-bold btn-light-primary"
+                        }
+                    }).then(function () {
+                        KTUtil.scrollTop();
+                    });
+                });
+                
+            </script>
+        </th:block>
+        
+    </body>
+</html>

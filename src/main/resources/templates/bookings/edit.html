@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="base/master">
+    
+    <head>
+        <th:block layout:fragment="css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha512-H9jrZiiopUdsLpg94A333EfumgUBpO9MdbxStdeITo+KEIMaNfHNvwyjjDJb+ERPaRS6DpyRlKbvPUasNItRyw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        </th:block>        
+        <title>Información de la Reservación</title>
+        <style>
+            .gj-datepicker {
+                width: 100% !important;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="d-flex align-items-baseline flex-wrap mr-5" layout:fragment="breadcrumbs">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold my-1 mr-5">Reservaciones</h5>
+            <!--end::Page Title-->
+            <!--begin::Breadcrumb-->
+            <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+                <li class="breadcrumb-item">
+                    <a href="" class="text-muted">General</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/pitches}" class="text-muted">Reservaciones</a>
+                </li>
+            </ul>
+            <!--end::Breadcrumb-->
+        </div>
+        
+        <div class="container" layout:fragment="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form th:action="@{/bookings/save}" th:object="${booking}" method="post">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Información de la Reservación</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Fecha</label>
+                                            <input id="fecha" width="276" th:field="*{fecha}" readonly />
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="usuario_id" th:value="${#authentication.getPrincipal().getId()}" th:if="${#authentication.getPrincipal().getRol().getNombre() == 'Cliente'}">
+                                    <div class="col-md-4" th:if="${#authentication.getPrincipal().getRol().getNombre() == 'Administrador'}">
+                                        <div class="form-group">
+                                            <label>Nombre y apellido</label>
+                                            <select class="form-control" th:field="*{usuario_id}" required>
+                                                 <option value=""> -- </option>
+                                                 <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.nombre_completo}"></option>                                                 
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Cancha</label>
+                                            <select class="form-control" id="cancha_id" th:field="*{cancha_id}" required>
+                                                 <option value=""> -- </option>
+                                                 <option th:each="pitch : ${pitches}" th:value="${pitch.id}" th:text="${pitch.nombre}"></option>                                                 
+                                            </select>
+                                        </div>
+                                    </div>  
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Hora</label>                                            
+                                            <select id='hora' class="form-control" required name='hora'>
+                                                 <option value=""> -- </option>                                                 
+                                                 <option th:each="i : ${hours}" th:value="${i}" th:text="${i}" th:selected="(${i}==${ !booking.isEmpty() ? booking.get().getHora() : '' })"></option>                                                 
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" th:if="${#authentication.getPrincipal().getRol().getNombre() == 'Administrador'}">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Estado</label>
+                                            <select class="form-control" th:field="*{pagada}" required th:if="${!booking.isEmpty() && !booking.get().getPagada() && !booking.get().getCancelada()}">
+                                                 <option value="0">Pendiente</option>
+                                                 <option value="1">Pagada</option>
+                                            </select>
+                                            <input type="hidden" th:field="*{pagada}" th:if="${!booking.isEmpty() && booking.get().getPagada()}">
+                                            <input type="hidden" th:field="*{cancelada}" th:if="${!booking.isEmpty() && booking.get().getCancelada()}">
+                                            <span class="label label-lg font-weight-bold  label-light-success label-inline" th:if="${!booking.isEmpty() && booking.get().getPagada()}">Pagada</span>
+                                            <span class="label label-lg font-weight-bold  label-light-danger label-inline" th:if="${!booking.isEmpty() && booking.get().getCancelada()}">Cancelada</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12" id="horarios">
+                                        <table class="table w-100">
+                                            <tr>
+                                                <td style="width: 100px; background-color: #fafafa;" class="text-center"><strong>Hora</strong></td>
+                                                <td th:each="pitch : ${pitches}" class="text-center"><strong th:text="${pitch.nombre}"></strong></td>
+                                            </tr>
+                                            <tr th:each="hour : ${hours}">
+                                                <td style="width: 100px; background-color: #fafafa;" th:text="${hour}" class="text-center"></td>
+                                                <td th:each="pitch : ${pitches}" class="text-center"></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a th:href="@{/bookings}"  class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </div>
+
+        <th:block layout:fragment="script">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
+            <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha512-uURl+ZXMBrF4AwGaWmEetzrd+J5/8NRkWAvJx5sbPSSuOb0bZLqf+tOzniObO00BjHa/dD7gub9oCGMLPQHtQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script>
+                
+                var initialDate = "[[ ${!booking.isEmpty() ? booking.get().getFecha() : null} ]]";
+                var initialHour = "[[ ${!booking.isEmpty() ? booking.get().getHora() : null} ]]";
+                
+                $('#fecha').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    format: 'yyyy-mm-dd',
+                    change: function (e) {
+                        loadHoursTable(e.target.value);
+                        loadHours(e.target.value, $("#cancha_id").val());
+                    }
+                });
+                
+                $("#cancha_id").change(function() {
+                    loadHours($('#fecha').val(), $("#cancha_id").val());
+                });
+                
+                function loadHoursTable(date) {
+                                        
+                    var sendData = new Object();
+                    sendData.date = date;
+                    sendData.hour = initialHour;
+
+                    $.ajax({
+                        url: "[[@{/bookings/available-hours-pitches}]]",
+                        data: sendData,
+                        type: "post",
+                        dataType: "html",                            
+                        success: function(data) {                            
+                            $("#horarios").html(data);
+                       },
+                       error: function(data) {
+                           console.log(data);
+                       }
+                    });
+                }
+                
+                function loadHours(date, pitch_id) {
+                                        
+                    var sendData = new Object();
+                    sendData.date = date;
+                    sendData.pitch_id = pitch_id;
+                    sendData.hour = initialHour;
+                    
+                    $.ajax({
+                        url: "[[@{/bookings/available-hours}]]",
+                        data: sendData,
+                        type: "post",
+                        dataType: "json",                            
+                        success: function(data) {                               
+                            $("#hora").empty();
+                            $("#hora").append("<option>--</option>");
+                            $.each(data, function(k, i) {                                    
+                                $("#hora").append($("<option>", {
+                                    value: i,
+                                    text: i
+                                }));
+                            });
+                            $("#hora").val(initialHour);
+                       },
+                       error: function(data) {
+                           console.log(data);
+                       }
+                    });
+                }
+                
+                loadHoursTable(initialDate);     
+                loadHours($('#fecha').val(), $("#cancha_id").val());
+            </script>
+        </th:block>
+        
+    </body>
+</html>

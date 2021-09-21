@@ -1,0 +1,19 @@
+<table class="table w-100">
+    <tr>
+        <td style="width: 100px; background-color: #fafafa;" class="text-center"><strong>Hora</strong></td>        
+        <td class="text-center" th:each="p : ${pitches}"><strong th:text="${p.nombre}"></strong></td>
+    </tr>
+    <tr>
+        <td style="width: 100px; background-color: #fafafa;" class="text-center"><strong>Imagen</strong></td>
+        <td class="text-center" th:each="p : ${pitches}">
+            <a th:href="${p.path}" data-fancybox th:if="${p.getImagen()}"><img style="height:100px !important;" th:src="${p.path}"></a>
+        </td>
+    </tr>
+    <tr th:each="hour : ${hours}">
+        <td style="width: 100px; background-color: #fafafa;" th:text="${hour}" class="text-center"></td>
+        <td class="text-center" th:each="r : ${data.get(hour)}">
+            <span class="label label-lg font-weight-bold  label-light-danger label-inline" th:if="${r != null}">Reservado</span>
+            <span class="label label-lg font-weight-bold  label-light-success label-inline" th:if="${!date.equals('') && r == null}">Disponible</span>
+        </td>
+    </tr>
+</table>

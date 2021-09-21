@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="base/master">
+    
+    <head>
+        <title>Información de la Cancha</title>
+    </head>
+    <body>
+        <div class="d-flex align-items-baseline flex-wrap mr-5" layout:fragment="breadcrumbs">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold my-1 mr-5">Canchas</h5>
+            <!--end::Page Title-->
+            <!--begin::Breadcrumb-->
+            <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
+                <li class="breadcrumb-item">
+                    <a href="" class="text-muted">General</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a th:href="@{/pitches}" class="text-muted">Canchas</a>
+                </li>
+            </ul>
+            <!--end::Breadcrumb-->
+        </div>
+        
+        <div class="container" layout:fragment="content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form th:action="@{/pitches/save}" th:object="${pitch}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" th:field="*{id}">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Información de la Cancha</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">                                            
+                                            <div class="image-input image-input-outline" id="kt_image_1">
+                                                <label>Fotografía</label>
+
+                                                <div class="image-input-wrapper" th:style="'background: url(\'' + ${!pitch.isEmpty() && pitch.get().getImagen() != null ? pitch.get().getPath() : 'assets/media/users/blank.png'} + '\'); background-size: cover;'"></div>
+
+                                                <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
+                                                    <i class="fa fa-pen icon-sm text-muted"></i>
+                                                    <input type="file" name="file" accept=".png, .jpg, .jpeg"/>
+                                                    <input type="hidden" th:field="*{imagen}"/>
+                                                    <input type="hidden" name="file_remove"/>
+                                                </label>
+
+                                                <span class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="cancel" data-toggle="tooltip" title="Cancel avatar">
+                                                    <i class="ki ki-bold-close icon-xs text-muted"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Nombre</label>
+                                            <input type="text" class="form-control" th:field="*{nombre}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label>Descripción</label>
+                                            <select class="form-control" th:field="*{descripcion}" required>
+                                                 <option value=""> -- </option>
+                                                 <option value="Pasto"> Pasto </option>
+                                                 <option value="Sintética"> Sintética </option>                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label>No. canchas</label>
+                                            <input type="text" class="form-control" th:field="*{numero_canchas}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>Teléfono</label>
+                                            <input type="text" class="form-control" th:field="*{telefono}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label>E-mail</label>
+                                            <input type="email" class="form-control" th:field="*{email}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Valor día</label>
+                                            <input type="text" class="form-control" th:field="*{valor_dia}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Valor noche</label>
+                                            <input type="text" class="form-control" th:field="*{valor_noche}" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a th:href="@{/pitches}"  class="btn btn-secondary">Cancelar</a>
+                                <button type="submit" class="btn btn-success">Guardar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>            
+        </div>
+
+        <th:block layout:fragment="script">
+            <script>
+                var avatar1 = new KTImageInput('kt_image_1');
+            </script>
+        </th:block>
+        
+    </body>
+</html>
